@@ -61,6 +61,50 @@ app.get("/wait", (req, res) => {
     }, 1000);
 });
 
+app.post("/demosql", (req, res) => {
+    var name = req.body.name;
+
+    if (name) {
+        db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
+        .then(() => {
+            //We successfully added the name, let the user know
+            res.send({
+                success: true
+            });
+        }).catch((err) => {
+            //log the error
+            console.log(err);
+            res.send({
+                success: false,
+                error: err
+            });
+        });
+    } else {
+        res.send({
+            success: false,
+            input: req.body,
+            error: "Missing required information"
+        });
+    }
+});
+
+app.get("/demosql", (req, res) => {
+
+    db.manyOrNone('SELECT Text FROM Demo')
+    //If successful, run function passed into .then()
+    .then((data) => {
+        res.send({
+            success: true,
+            names: data
+        });
+    }).catch((error) => {
+        console.log(error);
+        res.send({
+            success: false,
+            error: error
+        })
+    });
+});
 
 
 
