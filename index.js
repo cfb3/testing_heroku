@@ -10,26 +10,17 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 //pg-promise is a postgres library that uses javascript promises
-// const pgp = require('pg-promise')();
+const pgp = require('pg-promise')();
 //We have to set ssl usage to true for Heroku to accept our connection
-// pgp.pg.defaults.ssl = true;
+pgp.pg.defaults.ssl = true;
 
 //Create connection to Heroku Database
-// let db = pgp(process.env.DATABASE_URL);
+let db = pgp(process.env.DATABASE_URL);
 
-// if(!db) {
-//    console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
-//    process.exit(1);
-// }
-
-const { Client } = require('pg');
-
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-});
-
-client.connect();
+if(!db) {
+   console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
+   process.exit(1);
+}
 
 /*
  * Hello world functions below...
@@ -75,42 +66,21 @@ app.post("/demosql", (req, res) => {
 
 console.log("Name is " + name);
 
-    if(name) {
-        const q = 'INSERT INTO DEMO(Text) VALUES ($1) RETURNING *'
-        const values = [name]
-        client.query(q, name, (err, result) => {
-            if (err) {
-                //log the error
-                console.log(err);
-                res.send({
-                    success: false,
-                    error: err
-                });
-            } else {
-                //We successfully added the name, let the user know
-                console.log(result.rows[0])
-                res.send({
-                    success: true,
-                    result: result.rows[0]
-                });
-            }
-        })
-
-    // if (name) {
-    //     db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
-    //     .then(() => {
-    //         //We successfully added the name, let the user know
-    //         res.send({
-    //             success: true
-    //         });
-    //     }).catch((err) => {
-    //         //log the error
-    //         console.log(err);
-    //         res.send({
-    //             success: false,
-    //             error: err
-    //         });
-    //     });
+    if (name) {
+        db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
+        .then(() => {
+            //We successfully added the name, let the user know
+            res.send({
+                success: true
+            });
+        }).catch((err) => {
+            //log the error
+            console.log(err);
+            res.send({
+                success: false,
+                error: err
+            });
+        });
     } else {
         res.send({
             success: false,
@@ -120,23 +90,23 @@ console.log("Name is " + name);
     }
 });
 
-// app.get("/demosql", (req, res) => {
+app.get("/demosql", (req, res) => {
 
-//     db.manyOrNone('SELECT Text FROM Demo')
-//     //If successful, run function passed into .then()
-//     .then((data) => {
-//         res.send({
-//             success: true,
-//             names: data
-//         });
-//     }).catch((error) => {
-//         console.log(error);
-//         res.send({
-//             success: false,
-//             error: error
-//         })
-//     });
-// });
+    db.manyOrNone('SELECT Text FROM Demo')
+    //If successful, run function passed into .then()
+    .then((data) => {
+        res.send({
+            success: true,
+            names: data
+        });
+    }).catch((error) => {
+        console.log(error);
+        res.send({
+            success: false,
+            error: error
+        })
+    });
+});
 
 
 
