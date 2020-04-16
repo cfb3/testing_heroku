@@ -22,6 +22,15 @@ if(!db) {
    process.exit(1);
 }
 
+const { Client } = require('pg');
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+});
+
+client.connect();
+
 /*
  * Hello world functions below...
  */
@@ -66,21 +75,42 @@ app.post("/demosql", (req, res) => {
 
 console.log("Name is " + name);
 
-    if (name) {
-        db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
-        .then(() => {
-            //We successfully added the name, let the user know
-            res.send({
-                success: true
-            });
-        }).catch((err) => {
-            //log the error
-            console.log(err);
-            res.send({
-                success: false,
-                error: err
-            });
-        });
+    if(name) {
+        const q = 'INSERT INTO DEMO(Text) VALUES ($1) RETURNING *'
+        const values = [name]
+        client.query(q, name, (err, result) => {
+            if (err) {
+                //log the error
+                console.log(err);
+                res.send({
+                    success: false,
+                    error: err
+                });
+            } else {
+                //We successfully added the name, let the user know
+                console.log(result.rows[0])
+                res.send({
+                    success: true,
+                    result: result.rows[0]
+                });
+            }
+        })
+
+    // if (name) {
+    //     db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
+    //     .then(() => {
+    //         //We successfully added the name, let the user know
+    //         res.send({
+    //             success: true
+    //         });
+    //     }).catch((err) => {
+    //         //log the error
+    //         console.log(err);
+    //         res.send({
+    //             success: false,
+    //             error: err
+    //         });
+    //     });
     } else {
         res.send({
             success: false,
