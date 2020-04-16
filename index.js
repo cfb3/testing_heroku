@@ -64,6 +64,8 @@ app.get("/wait", (req, res) => {
 app.post("/demosql", (req, res) => {
     var name = req.body.name;
 
+console.log("Name is " + name);
+
     if (name) {
         db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
         .then(() => {
