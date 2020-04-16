@@ -9,18 +9,24 @@ const bodyParser = require("body-parser");
 //This allows parsing of the body of POST requests, that are encoded in JSON
 app.use(bodyParser.json());
 
-//pg-promise is a postgres library that uses javascript promises
-const pgp = require('pg-promise')();
-//We have to set ssl usage to true for Heroku to accept our connection
-pgp.pg.defaults.ssl = true;
+// //pg-promise is a postgres library that uses javascript promises
+// const pgp = require('pg-promise')();
+// //We have to set ssl usage to true for Heroku to accept our connection
+// pgp.pg.defaults.ssl = true;
 
-//Create connection to Heroku Database
-let db = pgp(process.env.DATABASE_URL);
+// //Create connection to Heroku Database
+// let db = pgp(process.env.DATABASE_URL);
 
-if(!db) {
-   console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
-   process.exit(1);
-}
+// if(!db) {
+//    console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
+//    process.exit(1);
+// }
+
+const { Pool } = require('pg')
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+})
 
 /*
  * Hello world functions below...
@@ -64,31 +70,65 @@ app.get("/wait", (req, res) => {
 app.post("/demosql", (req, res) => {
     var name = req.body.name;
 
-console.log("Name is " + name);
+    console.log("Name is " + name);
 
     if (name) {
-        db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
-        .then(() => {
-            //We successfully added the name, let the user know
-            res.send({
-                success: true
-            });
-        }).catch((err) => {
-            //log the error
-            console.log(err);
-            res.send({
-                success: false,
-                error: err
-            });
-        });
+        const client = await pool.connect()
+        const theQuery = "INSERT INTO DEMO(Text) VALUES ($1)"
+        const values = [name]
+
+        client.query(theQuery, values, (err, res) => {
+            if (err) {
+                //log the error
+                console.log(err.stack)
+                res.send({
+                    success: false,
+                    error: err
+                }) 
+            } else {
+                console.log(res.rows[0])
+                res.send({
+                    success: true,
+                    msg: res.rows[0]
+                })
+            }
+        })
+
+
     } else {
         res.send({
             success: false,
             input: req.body,
             error: "Missing required information"
-        });
-    }
-});
+        })
+    }    
+
+}
+
+
+    // if (name) {
+    //     db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
+    //     .then(() => {
+    //         //We successfully added the name, let the user know
+    //         res.send({
+    //             success: true
+    //         });
+    //     }).catch((err) => {
+            // //log the error
+            // console.log(err);
+            // res.send({
+            //     success: false,
+            //     error: err
+            // });
+    //     });
+    // } else {
+    //     res.send({
+    //         success: false,
+    //         input: req.body,
+    //         error: "Missing required information"
+    //     });
+    // }
+// });
 
 app.get("/demosql", (req, res) => {
 
