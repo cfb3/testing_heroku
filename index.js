@@ -103,7 +103,7 @@ app.post("/demosql", (req, res) => {
         })
     }    
 
-}
+})
 
 
     // if (name) {
