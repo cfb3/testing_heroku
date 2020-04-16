@@ -73,11 +73,11 @@ app.post("/demosql", (req, res) => {
     console.log("Name is " + name);
 
     if (name) {
-        const client = await pool.connect()
+        // const client = await pool.connect()
         const theQuery = "INSERT INTO DEMO(Text) VALUES ($1)"
         const values = [name]
 
-        client.query(theQuery, values, (err, res) => {
+        pool.query(theQuery, values, (err, res) => {
             if (err) {
                 //log the error
                 console.log(err.stack)
