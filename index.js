@@ -75,6 +75,8 @@ app.post("/demosql", (req, res) => {
 
 console.log("Name is " + name);
 
+    client.connect();
+
     if(name) {
         const q = 'INSERT INTO DEMO(Text) VALUES ($1) RETURNING *'
         const values = [name]
