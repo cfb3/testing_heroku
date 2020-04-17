@@ -54,6 +54,22 @@ app.get("/wait", (req, res) => {
 
 app.post("/demosql", (req, res) => {
 
+    var auth = req.headers['authorization']
+
+    console.log(auth)
+
+    if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+        return res.status(401).json({ message: 'Missing Authorization Header' });
+    }
+
+    // verify auth credentials
+    const base64Credentials =  req.headers.authorization.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+
+    console.log(username)
+    console.log(password)
+
     if (req.body.name) {
         const theQuery = "INSERT INTO DEMO(Text) VALUES ($1) RETURNING *"
         const values = [req.body.name]
