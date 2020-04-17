@@ -1,100 +1,79 @@
 //express is the framework we're going to use to handle requests
-const express = require('express');
+const express = require('express')
 //Create a new instance of express
-const app = express();
+const app = express()
 
 //let middleware = require('./utilities/middleware');
 
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser")
 //This allows parsing of the body of POST requests, that are encoded in JSON
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 
-// //pg-promise is a postgres library that uses javascript promises
-// const pgp = require('pg-promise')();
-// //We have to set ssl usage to true for Heroku to accept our connection
-// pgp.pg.defaults.ssl = true;
-
-// //Create connection to Heroku Database
-// let db = pgp(process.env.DATABASE_URL);
-
-// if(!db) {
-//    console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
-//    process.exit(1);
-// }
-
+//Obtain a Pool of DB connections. 
 const { Pool } = require('pg')
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: true
+    ssl: {
+        rejectUnauthorized: false,
+    }
 })
 
 /*
  * Hello world functions below...
  */
-app.get("/hello", (req, res) => {
-    res.send({
-        message: "Hello, you sent a GET request"
-    });
-});
 
 
 app.post("/hello", (req, res) => {
     res.send({
         message: "Hello, you sent a POST request"
-    });
-});
+    })
+})
 
 app.get("/params", (req, res) => {
     res.send({
         //req.query is a reference to arguments in the url
         message: "Hello, " + req.query.name + "!"
-    });
-});
+    })
+})
 
 app.post("/params", (req, res) => {
 
     res.send({
         //req.query is a reference to arguments in the POST body
         message: "Hello, " + req.body.name + "! You sent a POST Request"
-    });
-});
+    })
+})
 
 app.get("/wait", (req, res) => {
     setTimeout(() => {
         res.send({
             message: "Thanks for waiting"
         });
-    }, 1000);
-});
+    }, 5000)
+})
 
 app.post("/demosql", (req, res) => {
-    var name = req.body.name;
 
-    console.log("Name is " + name);
+    if (req.body.name) {
+        const theQuery = "INSERT INTO DEMO(Text) VALUES ($1) RETURNING *"
+        const values = [req.body.name]
 
-    if (name) {
-        // const client = await pool.connect()
-        const theQuery = "INSERT INTO DEMO(Text) VALUES ($1)"
-        const values = [name]
-
-        pool.query(theQuery, values, (err, res) => {
-            if (err) {
+        pool.query(theQuery, values)
+            .then(result => {
+                console.log(result.rows[0])
+                res.send({
+                    success: true,
+                    msg: result.rows[0]
+                })
+            })
+            .catch(err => {
                 //log the error
                 console.log(err.stack)
                 res.send({
                     success: false,
                     error: err
-                }) 
-            } else {
-                console.log(res.rows[0])
-                res.send({
-                    success: true,
-                    msg: res.rows[0]
                 })
-            }
-        })
-
-
+            }) 
     } else {
         res.send({
             success: false,
@@ -102,53 +81,23 @@ app.post("/demosql", (req, res) => {
             error: "Missing required information"
         })
     }    
-
 })
-
-
-    // if (name) {
-    //     db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
-    //     .then(() => {
-    //         //We successfully added the name, let the user know
-    //         res.send({
-    //             success: true
-    //         });
-    //     }).catch((err) => {
-            // //log the error
-            // console.log(err);
-            // res.send({
-            //     success: false,
-            //     error: err
-            // });
-    //     });
-    // } else {
-    //     res.send({
-    //         success: false,
-    //         input: req.body,
-    //         error: "Missing required information"
-    //     });
-    // }
-// });
 
 app.get("/demosql", (req, res) => {
 
-    db.manyOrNone('SELECT Text FROM Demo')
-    //If successful, run function passed into .then()
-    .then((data) => {
-        res.send({
-            success: true,
-            names: data
-        });
-    }).catch((error) => {
-        console.log(error);
-        res.send({
-            success: false,
-            error: error
-        })
-    });
-});
-
-
+    pool.query('SELECT demoid, Text FROM Demo')
+        .then(result => 
+            res.send({
+                success: true,
+                names: result.rows
+        }))
+        .catch(error => 
+            res.send({
+                success: false,
+                error: error
+        }))
+    }
+)
 
 
 
