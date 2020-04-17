@@ -49,7 +49,7 @@ app.get("/wait", (req, res) => {
         res.send({
             message: "Thanks for waiting"
         });
-    }, 5000)
+    }, 1000)
 })
 
 app.post("/demosql", (req, res) => {
