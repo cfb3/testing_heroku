@@ -13,6 +13,8 @@ var router = express.Router()
  * @apiName GetPhishBlogGet
  * @apiGroup Phish
  * 
+ * @apiHeader {String} authorization JWT provided from Auth get
+ * 
  * @apiDescription This end point is a pass through to Phish.net API. 
  * All parameters will pass on to https://api.phish.net/v3/blog/get.
  * See the <a href="https://phishnet.api-docs.io/v3/blog/blog-get">Phish.net documentation</a>

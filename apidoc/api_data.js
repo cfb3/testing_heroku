@@ -5,22 +5,15 @@ define({ "api": [
     "title": "Request to sign a user in the system",
     "name": "GetAuth",
     "group": "Auth",
-    "parameter": {
+    "header": {
       "fields": {
-        "Parameter": [
+        "Header": [
           {
-            "group": "Parameter",
+            "group": "Header",
             "type": "String",
             "optional": false,
-            "field": "email",
-            "description": "<p>a users email</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "password",
-            "description": "<p>a users password</p>"
+            "field": "authorization",
+            "description": "<p>&quot;username:password&quot; uses Basic Auth,</p>"
           }
         ]
       }
@@ -458,6 +451,19 @@ define({ "api": [
     "title": "Request to resgister a user",
     "name": "GetPhishBlogGet",
     "group": "Phish",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>JWT provided from Auth get</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>This end point is a pass through to Phish.net API. All parameters will pass on to https://api.phish.net/v3/blog/get. See the <a href=\"https://phishnet.api-docs.io/v3/blog/blog-get\">Phish.net documentation</a> for a list of optional paramerters and expected results. You do not need a Phish.net api key with this endpoint.</p>",
     "version": "0.0.0",
     "filename": "routes/phish.js",

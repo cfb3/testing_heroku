@@ -23,8 +23,7 @@ let config = {
  * @apiName GetAuth
  * @apiGroup Auth
  * 
- * @apiParam {String} email a users email
- * @apiParam {String} password a users password
+ * @apiHeader {String} authorization "username:password" uses Basic Auth 
  * 
  * @apiSuccess {boolean} success true when the name is found and password matches
  * @apiSuccess {String} message Authentication successful!
