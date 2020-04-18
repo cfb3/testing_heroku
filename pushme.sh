@@ -1,5 +1,5 @@
 MSG="$*"
-if [ -z $MSG ] 
+if [ -z "$MSG" ] 
 then
 	MSG="no comit message"
 fi
