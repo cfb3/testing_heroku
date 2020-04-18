@@ -3,118 +3,34 @@ const express = require('express')
 //Create a new instance of express
 const app = express()
 
-//let middleware = require('./utilities/middleware');
+let middleware = require('./utilities/middleware')
 
 const bodyParser = require("body-parser")
 //This allows parsing of the body of POST requests, that are encoded in JSON
 app.use(bodyParser.json())
 
-//Obtain a Pool of DB connections. 
-const { Pool } = require('pg')
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false,
-    }
-})
-
-/*
- * Hello world functions below...
+/**
+ * 
  */
+app.use('/hello', require('./routes/hello.js'))
 
+app.use('/params', require('./routes/params.js'))
 
-app.post("/hello", (req, res) => {
-    res.send({
-        message: "Hello, you sent a POST request"
-    })
-})
-
-app.get("/params", (req, res) => {
-    res.send({
-        //req.query is a reference to arguments in the url
-        message: "Hello, " + req.query.name + "!"
-    })
-})
-
-app.post("/params", (req, res) => {
-
-    res.send({
-        //req.query is a reference to arguments in the POST body
-        message: "Hello, " + req.body.name + "! You sent a POST Request"
-    })
-})
-
-app.get("/wait", (req, res) => {
+app.get("/wait", (request, response) => {
     setTimeout(() => {
-        res.send({
+        response.send({
             message: "Thanks for waiting"
         });
-    }, 9000)
+    }, 5000)
 })
 
-app.post("/demosql", (req, res) => {
+app.use('/demosql', require('./routes/demosql.js'))
 
-    var auth = req.headers['authorization']
+app.use('/auth', require('./routes/register.js'))
 
-    console.log(auth)
+app.use('/auth', require('./routes/login.js'))
 
-    if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
-        return res.status(401).json({ message: 'Missing Authorization Header' });
-    }
-
-    // verify auth credentials
-    const base64Credentials =  req.headers.authorization.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-    const [username, password] = credentials.split(':');
-
-    console.log(username)
-    console.log(password)
-
-    if (req.body.name) {
-        const theQuery = "INSERT INTO DEMO(Text) VALUES ($1) RETURNING *"
-        const values = [req.body.name]
-
-        pool.query(theQuery, values)
-            .then(result => {
-                console.log(result.rows[0])
-                res.send({
-                    success: true,
-                    msg: result.rows[0]
-                })
-            })
-            .catch(err => {
-                //log the error
-                console.log(err.stack)
-                res.send({
-                    success: false,
-                    error: err
-                })
-            }) 
-    } else {
-        res.send({
-            success: false,
-            input: req.body,
-            error: "Missing required information"
-        })
-    }    
-})
-
-app.get("/demosql", (req, res) => {
-
-    pool.query('SELECT demoid, Text FROM Demo')
-        .then(result => 
-            res.send({
-                success: true,
-                names: result.rows
-        }))
-        .catch(error => 
-            res.send({
-                success: false,
-                error: error
-        }))
-    }
-)
-
+app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
 
 
 /*
@@ -123,14 +39,20 @@ app.get("/demosql", (req, res) => {
  * Create a web page in HTML/CSS and have this end point return it. 
  * Look up the node module 'fs' ex: require('fs');
  */
-app.get("/", (req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/html'});
+app.get("/", (request, response) => {
+    response.writeHead(200, {'Content-Type': 'text/html'});
     for (i = 1; i < 7; i++) {
         //write a response to the client
-        res.write('<h' + i + ' style="color:blue">Hello World!</h' + i + '>'); 
+        response.write('<h' + i + ' style="color:blue">Hello World!</h' + i + '>'); 
     }
-    res.end(); //end the response
+    response.end(); //end the response
 });
+
+/*
+ * Sever the API documentation genertate by apidoc as HTML. 
+ * https://apidocjs.com/
+ */
+app.use("/doc", express.static('apidoc'))
 
 /* 
 * Heroku will assign a port you can use via the 'PORT' environment variable
