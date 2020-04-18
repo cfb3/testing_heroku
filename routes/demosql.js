@@ -26,8 +26,8 @@ let pool = require('../utilities/utils').pool
  * 
  * @apiParam {String} name someone's name
  * 
- * @apiSuccess (Success) {boolean} success true when the name is inserted
- * @apiSuccess (Success) {String} msg the inserted name
+ * @apiSuccess {boolean} success true when the name is inserted
+ * @apiSuccess {String} msg the inserted name
  * 
  * @apiError (400: Missing Parameters) {String} error "Missing required information"
  * 
@@ -65,8 +65,8 @@ router.post("/", (request, response) => {
  * @apiName GetDemoSql
  * @apiGroup DemoSql
  * 
- * @apiSuccess (Success) {boolean} success true when the name is inserted
- * @apiSuccess (Success) {String[]} names lit of names in the Demo DB
+ * @apiSuccess {boolean} success true when the name is inserted
+ * @apiSuccess {String[]} names lit of names in the Demo DB
  * 
  * @apiError (400: SQL Error) {String} error the reported SQL error details
  */ 

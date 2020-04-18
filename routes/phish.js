@@ -8,6 +8,17 @@ const request = require('request')
 
 var router = express.Router()
 
+/**
+ * @api {get} /phish/blog/get Request to resgister a user
+ * @apiName GetPhishBlogGet
+ * @apiGroup Phish
+ * 
+ * @apiDescription This end point is a pass through to Phish.net API. 
+ * All parameters will pass on to https://api.phish.net/v3/blog/get.
+ * See the <a href="https://phishnet.api-docs.io/v3/blog/blog-get">Phish.net documentation</a>
+ * for a list of optional paramerters and expected results. You do not need a 
+ * Phish.net api key with this endpoint. 
+ */ 
 router.get("/blog/get", (req, res) => {
     // for info on use of tilde (`) making a String literal, see below. 
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
@@ -34,6 +45,8 @@ router.get("/blog/get", (req, res) => {
     })
 })
 
+
+// document for apidoc
 router.get("/setlists/recent", (req, res) => {
 
    //implement as part of the challenge for this lab. 

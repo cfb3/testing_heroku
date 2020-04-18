@@ -28,8 +28,8 @@ router.use(bodyParser.json())
  * @apiParam {String} email a users email *required unique
  * @apiParam {String} password a users password
  * 
- * @apiSuccess (Success) {boolean} success true when the name is inserted
- * @apiSuccess (Success) {String} email the email of the user inserted 
+ * @apiSuccess {boolean} success true when the name is inserted
+ * @apiSuccess {String} email the email of the user inserted 
  * 
  * @apiError (400: Missing Parameters) {String} error "Missing required information"
  * 

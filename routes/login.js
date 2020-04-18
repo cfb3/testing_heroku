@@ -26,13 +26,13 @@ let config = {
  * @apiParam {String} email a users email
  * @apiParam {String} password a users password
  * 
- * @apiSuccess (Success) {boolean} success true when the name is found and password matches
- * @apiSuccess (Success) {String} message Authentication successful!
- * @apiSuccess (Success) {String} token JWT
+ * @apiSuccess {boolean} success true when the name is found and password matches
+ * @apiSuccess {String} message Authentication successful!
+ * @apiSuccess {String} token JSON Web Token
  * 
  * @apiError (400: Missing Parameters) {String} error "Missing required information"
  * 
- * @apiError (400: User Not Found) {String} error "User not found"
+ * @apiError (404: User Not Found) {String} error "User not found"
  * 
  * @apiError (400: Invalid Credentials) {String} error "Credentials did not match"
  * 

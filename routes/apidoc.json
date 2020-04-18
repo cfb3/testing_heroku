@@ -7,6 +7,8 @@
   "order": [
     "Hello",
     "Params",
-    "DemoSql"
+    "DemoSql",
+    "Auth",
+    "Phish"
   ]
 }

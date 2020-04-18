@@ -7,14 +7,16 @@
   "order": [
     "Hello",
     "Params",
-    "DemoSql"
+    "DemoSql",
+    "Auth",
+    "Phish"
   ],
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2020-04-18T04:35:36.598Z",
+    "time": "2020-04-18T04:57:54.512Z",
     "url": "http://apidocjs.com",
     "version": "0.20.1"
   }

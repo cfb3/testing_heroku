@@ -27,27 +27,27 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "boolean",
             "optional": false,
             "field": "success",
             "description": "<p>true when the name is found and password matches</p>"
           },
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "message",
             "description": "<p>Authentication successful!</p>"
           },
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "token",
-            "description": "<p>JWT</p>"
+            "description": "<p>JSON Web Token</p>"
           }
         ]
       }
@@ -63,9 +63,9 @@ define({ "api": [
             "description": "<p>&quot;Missing required information&quot;</p>"
           }
         ],
-        "400: User Not Found": [
+        "404: User Not Found": [
           {
-            "group": "400: User Not Found",
+            "group": "404: User Not Found",
             "type": "String",
             "optional": false,
             "field": "error",
@@ -145,16 +145,16 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "boolean",
             "optional": false,
             "field": "success",
             "description": "<p>true when the name is inserted</p>"
           },
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "email",
@@ -215,16 +215,16 @@ define({ "api": [
     "group": "DemoSql",
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "boolean",
             "optional": false,
             "field": "success",
             "description": "<p>true when the name is inserted</p>"
           },
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String[]",
             "optional": false,
             "field": "names",
@@ -271,16 +271,16 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "boolean",
             "optional": false,
             "field": "success",
             "description": "<p>true when the name is inserted</p>"
           },
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "msg",
@@ -382,9 +382,9 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "message",
@@ -431,9 +431,9 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success": [
+        "Success 200": [
           {
-            "group": "Success",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "message",
@@ -458,5 +458,16 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "routes/params.js",
     "groupTitle": "Params"
+  },
+  {
+    "type": "get",
+    "url": "/phish/blog/get",
+    "title": "Request to resgister a user",
+    "name": "GetPhishBlogGet",
+    "group": "Phish",
+    "description": "<p>This end point is a pass through to Phish.net API. All parameters will pass on to https://api.phish.net/v3/blog/get. See the <a href=\"https://phishnet.api-docs.io/v3/blog/blog-get\">Phish.net documentation</a> for a list of optional paramerters and expected results. You do not need a Phish.net api key with this endpoint.</p>",
+    "version": "0.0.0",
+    "filename": "routes/phish.js",
+    "groupTitle": "Phish"
   }
 ] });

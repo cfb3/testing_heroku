@@ -14,7 +14,7 @@ router.use(bodyParser.json())
  * 
  * @apiParam {String} name someone's name
  * 
- * @apiSuccess (Success) {String} message Hello World message with echo of name
+ * @apiSuccess {String} message Hello World message with echo of name
  * 
  * @apiError (400: Missing Parameters) {String} error "Missing required information"
  */ 
@@ -39,7 +39,7 @@ router.get("/", (request, response) => {
  * 
  * @apiParam {String} name someone's name
  * 
- * @apiSuccess (Success) {String} message Hello World message with echo of name
+ * @apiSuccess {String} message Hello World message with echo of name
  * 
  * @apiError (400: Missing Parameters) {String} error "Missing required information"
  */ 
