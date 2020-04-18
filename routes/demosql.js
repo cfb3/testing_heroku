@@ -27,11 +27,11 @@ let pool = require('../utilities/utils').pool
  * @apiParam {String} name someone's name
  * 
  * @apiSuccess {boolean} success true when the name is inserted
- * @apiSuccess {String} msg the inserted name
+ * @apiSuccess {String} message the inserted name
  * 
- * @apiError (400: Missing Parameters) {String} error "Missing required information"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
  * 
- * @apiError (400: SQL Error) {String} error the reported SQL error details
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
 router.post("/", (request, response) => {
 
@@ -43,19 +43,19 @@ router.post("/", (request, response) => {
             .then(result => {
                 response.send({
                     success: true,
-                    msg: result.rows[0].text
+                    message: result.rows[0].text
                 })
             })
             .catch(err => {
                 //log the error
                 // console.log(err.details)
                 response.status(400).send({
-                    error: err.detail
+                    message: err.detail
                 })
             }) 
     } else {
         response.status(400).send({
-            error: "Missing required information"
+            message: "Missing required information"
         })
     }    
 })
@@ -68,7 +68,7 @@ router.post("/", (request, response) => {
  * @apiSuccess {boolean} success true when the name is inserted
  * @apiSuccess {String[]} names lit of names in the Demo DB
  * 
- * @apiError (400: SQL Error) {String} error the reported SQL error details
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
 router.get("/", (request, response) => {
 
@@ -82,7 +82,7 @@ router.get("/", (request, response) => {
             //log the error
             // console.log(err.details)
             response.status(400).send({
-                error: err.detail
+                message: err.detail
             })
         })
 })

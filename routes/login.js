@@ -29,13 +29,13 @@ let config = {
  * @apiSuccess {String} message Authentication successful!
  * @apiSuccess {String} token JSON Web Token
  * 
- * @apiError (400: Missing Parameters) {String} error "Missing required information"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
  * 
- * @apiError (404: User Not Found) {String} error "User not found"
+ * @apiError (404: User Not Found) {String} message "User not found"
  * 
- * @apiError (400: Invalid Credentials) {String} error "Credentials did not match"
+ * @apiError (400: Invalid Credentials) {String} message "Credentials did not match"
  * 
- * @apiError (400: SQL Error) {String} error the reported SQL error details
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
 router.get('/', (request, response) => {
     if (!request.headers.authorization || request.headers.authorization.indexOf('Basic ') === -1) {
@@ -90,12 +90,12 @@ router.get('/', (request, response) => {
                 //log the error
                 //console.log(err.stack)
                 res.status(400).send({
-                    error: err.detail
+                    message: err.detail
                 })
             })
     } else {
         response.status(400).send({
-            error: "Missing required information"
+            message: "Missing required information"
         })
     }
 })

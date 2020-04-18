@@ -30,13 +30,13 @@ router.use(bodyParser.json())
  * @apiSuccess {boolean} success true when the name is inserted
  * @apiSuccess {String} email the email of the user inserted 
  * 
- * @apiError (400: Missing Parameters) {String} error "Missing required information"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
  * 
- * @apiError (400: Username exists) {String} error "Username exists"
+ * @apiError (400: Username exists) {String} message "Username exists"
  * 
- * @apiError (400: Email exists) {String} error "Email exists"
+ * @apiError (400: Email exists) {String} message "Email exists"
  * 
- * @apiError (400: SQL Error) {String} error the reported SQL error details
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
 router.post('/', (req, res) => {
     res.type("application/json")
@@ -74,21 +74,21 @@ router.post('/', (req, res) => {
                 //console.log(err)
                 if (err.constraint == "members_username_key") {
                     res.status(400).send({
-                        error: "Username exists"
+                        message: "Username exists"
                     })
                 } else if (err.constraint == "members_email_key") {
                     res.status(400).send({
-                        error: "Email exists"
+                        message: "Email exists"
                     })
                 } else {
                     res.status(400).send({
-                        error: err.detail
+                        message: err.detail
                     })
                 }
             })
     } else {
         response.status(400).send({
-            error: "Missing required information"
+            message: "Missing required information"
         })
     }
 })

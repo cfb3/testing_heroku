@@ -16,7 +16,7 @@ router.use(bodyParser.json())
  * 
  * @apiSuccess {String} message Hello World message with echo of name
  * 
- * @apiError (400: Missing Parameters) {String} error "Missing required information"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
  */ 
 router.get("/", (request, response) => {
     if (request.body.name) {
@@ -27,7 +27,7 @@ router.get("/", (request, response) => {
     } else {
         response.status(400)
         response.send({
-            error: "Missing required information"
+            message: "Missing required information"
         })
     }
 })
@@ -41,7 +41,7 @@ router.get("/", (request, response) => {
  * 
  * @apiSuccess {String} message Hello World message with echo of name
  * 
- * @apiError (400: Missing Parameters) {String} error "Missing required information"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
  */ 
 router.post("/", (request, response) => {
     if (request.body.name) {
@@ -52,7 +52,7 @@ router.post("/", (request, response) => {
     } else {
         response.status(400)
         response.send({
-            error: "Missing required information"
+            message: "Missing required information"
         })
     }
 })
