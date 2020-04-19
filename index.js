@@ -9,9 +9,16 @@ const bodyParser = require("body-parser")
 //This allows parsing of the body of POST requests, that are encoded in JSON
 app.use(bodyParser.json())
 
-/**
- * 
- */
+
+
+app.use(function(err, req, res, next) {
+    //This middleware function will respond to inproperly formed JSON in 
+   //request parameters.
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    res.status(400).send({ message: "malformed JSON in parameters" });
+  } else next();
+})
+
 app.use('/hello', require('./routes/hello.js'))
 
 app.use('/params', require('./routes/params.js'))

@@ -52,7 +52,8 @@ CREATE TABLE Locations (PrimaryKey SERIAL PRIMARY KEY,
 
 DROP TABLE IF EXISTS Demo;
 CREATE TABLE Demo (DemoID SERIAL PRIMARY KEY,
-                        Text VARCHAR(255)
+                        Name VARCHAR(255) NOT NULL UNIQUE,
+                        Message VARCHAR(255)
 );
 
 
