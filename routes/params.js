@@ -19,7 +19,7 @@ router.use(bodyParser.json())
  * @apiError (400: Missing Parameters) {String} message "Missing required information"
  */ 
 router.get("/", (request, response) => {
-    if (request.body.name) {
+    if (request.query.name) {
         response.send({
             //req.query is a reference to arguments in the POST body
             message: "Hello, " + request.query.name + "! You sent a POST Request"
