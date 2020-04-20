@@ -22,7 +22,7 @@ router.get("/", (request, response) => {
     if (request.query.name) {
         response.send({
             //req.query is a reference to arguments in the POST body
-            message: "Hello, " + request.query.name + "! You sent a POST Request"
+            message: "Hello, " + request.query.name + "! You sent a GET Request"
         })
     } else {
         response.status(400)
