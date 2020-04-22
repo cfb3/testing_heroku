@@ -37,7 +37,7 @@ app.use('/auth', require('./routes/register.js'))
 
 app.use('/auth', require('./routes/login.js'))
 
-app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
+app.use('/phish', require('./routes/phish.js'))
 
 
 /*
