@@ -70,7 +70,7 @@ router.get('/', (request, response) => {
                     let token = jwt.sign({username: email},
                         config.secret,
                         { 
-                            expiresIn: '24h' // expires in 24 hours
+                            expiresIn: '14 days' // expires in 24 hours
                         }
                     )
                     //package and send the results
