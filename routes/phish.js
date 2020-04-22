@@ -9,7 +9,7 @@ const request = require('request')
 var router = express.Router()
 
 /**
- * @api {get} /phish/blog/get Request to resgister a user
+ * @api {get} /phish/blog/get Request a list of Phish.net Blogs
  * @apiName GetPhishBlogGet
  * @apiGroup Phish
  * 

@@ -260,6 +260,15 @@ define({ "api": [
             "field": "message",
             "description": "<p>the reported SQL error details</p>"
           }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
         ]
       }
     },
@@ -682,7 +691,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/phish/blog/get",
-    "title": "Request to resgister a user",
+    "title": "Request a list of Phish.net Blogs",
     "name": "GetPhishBlogGet",
     "group": "Phish",
     "header": {
