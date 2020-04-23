@@ -31,13 +31,6 @@ app.get("/wait", (request, response) => {
     }, 5000)
 })
 
-
-app.get("/test", (request, response) => {
-    response.send({
-        message: "Hello World"
-    })
-})
-
 app.use('/demosql', require('./routes/demosql.js'))
 
 app.use('/auth', require('./routes/register.js'))
