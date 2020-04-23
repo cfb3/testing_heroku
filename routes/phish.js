@@ -15,7 +15,7 @@ var router = express.Router()
  * 
  * @apiHeader {String} authorization JWT provided from Auth get
  * 
- * @apiDescription This end point is a pass through to Phish.net API. 
+ * @apiDescription This end point is a pass through to the Phish.net API. 
  * All parameters will pass on to https://api.phish.net/v3/blog/get.
  * See the <a href="https://phishnet.api-docs.io/v3/blog/blog-get">Phish.net documentation</a>
  * for a list of optional paramerters and expected results. You do not need a 
@@ -45,14 +45,6 @@ router.get("/blog/get", (req, res) => {
             res.send(body)
         }
     })
-})
-
-
-// document for apidoc
-router.get("/setlists/recent", (req, res) => {
-
-   //implement as part of the challenge for this lab. 
-
 })
 
 module.exports = router
