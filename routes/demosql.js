@@ -7,16 +7,14 @@ const bodyParser = require("body-parser")
 //This allows parsing of the body of POST requests, that are encoded in JSON
 router.use(bodyParser.json())
 
-// // Obtain a Pool of DB connections. 
-// const { Pool } = require('pg')
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false,
-//     }
-// })
-
-let pool = require('../utilities/utils').pool
+// Obtain a Pool of DB connections. 
+const { Pool } = require('pg')
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    }
+})
 
 /**
  * @apiDefine JSONError
