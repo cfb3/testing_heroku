@@ -19,7 +19,7 @@ var router = express.Router()
  * All parameters will pass on to https://api.phish.net/v3/blog/get.
  * See the <a href="https://phishnet.api-docs.io/v3/blog/blog-get">Phish.net documentation</a>
  * for a list of optional paramerters and expected results. You do not need a 
- * Phish.net api key with this endpoint. 
+ * Phish.net api key with this endpoint. Enjoy!
  */ 
 router.get("/blog/get", (req, res) => {
     // for info on use of tilde (`) making a String literal, see below. 
