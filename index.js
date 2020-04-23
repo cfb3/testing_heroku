@@ -27,8 +27,15 @@ app.get("/wait", (request, response) => {
     setTimeout(() => {
         response.send({
             message: "Thanks for waiting"
-        });
+        })
     }, 5000)
+})
+
+
+app.get("/test", (request, response) => {
+    response.send({
+        message: "Hello World"
+    })
 })
 
 app.use('/demosql', require('./routes/demosql.js'))
