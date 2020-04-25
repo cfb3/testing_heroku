@@ -29,8 +29,8 @@ const pool = new Pool({
  * @apiParam {String} name someone's name *unique
  * @apiParam {String} message a message to store with the name
  * 
- * @apiSuccess {boolean} success true when the name is inserted
- * @apiSuccess {String} message the inserted name
+ * @apiSuccess (Success 201) {boolean} success true when the name is inserted
+ * @apiSuccess (Success 201) {String} message the inserted name
  * 
  * @apiError (400: Name exists) {String} message "Name exists"
  * 
@@ -48,7 +48,7 @@ router.post("/", (request, response) => {
 
         pool.query(theQuery, values)
             .then(result => {
-                response.send({
+                response.status(201).send({
                     success: true,
                     message: "Inserted: " + result.rows[0].name
                 })
