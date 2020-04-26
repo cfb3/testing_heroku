@@ -42,7 +42,13 @@ router.get("/blog/get", (req, res) => {
             // res.send(response);
             
             // or just pass on the body
-            res.send(body)
+
+            var n = body.indexOf("{")
+            var nakidBody = body.substring(n - 1)
+
+            console.log(nakidBody)
+
+            res.send(nakidBody)
         }
     })
 })
