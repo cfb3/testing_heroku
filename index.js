@@ -41,6 +41,8 @@ app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
 
 app.use('/nojwt/phish', require('./routes/phish.js'))
 
+app.use('/messages', require('./routes/messaging.js'))
+
 
 /*
  * Return HTML for the / end point. 

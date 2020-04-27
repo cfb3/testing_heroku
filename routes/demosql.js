@@ -78,7 +78,7 @@ router.post("/", (request, response) => {
  * @apiName GetDemoSql
  * @apiGroup DemoSql
  * 
- * @apiParam {String} Optioal name the name to look up. If no name provided, all names are returned
+ * @apiParam {String} name (Optional) the name to look up. If no name provided, all names are returned
  * 
  * @apiSuccess {boolean} success true when the name is inserted
  * @apiSuccess {Object[]} names List of names in the Demo DB

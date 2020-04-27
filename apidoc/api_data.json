@@ -289,8 +289,8 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "Optioal",
-            "description": "<p>name the name to look up. If no name provided, all names are returned</p>"
+            "field": "name",
+            "description": "<p>(Optional) the name to look up. If no name provided, all names are returned</p>"
           }
         ]
       }
@@ -589,6 +589,101 @@
     "version": "0.0.0",
     "filename": "routes/hello.js",
     "groupTitle": "Hello"
+  },
+  {
+    "type": "get",
+    "url": "/messages/:chatId?/:messageId?",
+    "title": "Request to get chat messages from the server",
+    "name": "GetMessages",
+    "group": "Messages",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Optioal",
+            "description": "<p>name the name to look up. If no name provided, all names are returned</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Optional",
+            "description": "<p>name the name to look up. If no name provided, all names are returned</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>true when the name is inserted</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "names",
+            "description": "<p>List of names in the Demo DB</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "names.name",
+            "description": "<p>The name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "names.message",
+            "description": "<p>The message asscociated with the name</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "404: Name Not Found": [
+          {
+            "group": "404: Name Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Name not found&quot;</p>"
+          }
+        ],
+        "400: SQL Error": [
+          {
+            "group": "400: SQL Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>the reported SQL error details</p>"
+          }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/messaging.js",
+    "groupTitle": "Messages"
   },
   {
     "type": "get",
