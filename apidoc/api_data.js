@@ -593,25 +593,26 @@ define({ "api": [
   {
     "type": "get",
     "url": "/messages/:chatId?/:messageId?",
-    "title": "Request to get chat messages from the server",
+    "title": "Request to get chat messages",
     "name": "GetMessages",
     "group": "Messages",
+    "description": "<p>Request to get the 10 most recent chat messages from the server in a given chat - chatId. If an optional messageId is provided, return the 10 messages in the chat prior to (and not including) the message containing MessageID.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "Optioal",
-            "description": "<p>name the name to look up. If no name provided, all names are returned</p>"
+            "field": "chatId",
+            "description": "<p>the chat to look up.</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "Optional",
-            "description": "<p>name the name to look up. If no name provided, all names are returned</p>"
+            "field": "messageId",
+            "description": "<p>(Optional) return the 10 messages prior to this message</p>"
           }
         ]
       }
@@ -621,44 +622,67 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "boolean",
+            "type": "Number",
             "optional": false,
-            "field": "success",
-            "description": "<p>true when the name is inserted</p>"
+            "field": "rowCount",
+            "description": "<p>the number of messages returned</p>"
           },
           {
             "group": "Success 200",
             "type": "Object[]",
             "optional": false,
-            "field": "names",
-            "description": "<p>List of names in the Demo DB</p>"
+            "field": "messages",
+            "description": "<p>List of massages in the message table</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "names.name",
-            "description": "<p>The name</p>"
+            "field": "messages.messageId",
+            "description": "<p>The id for this message</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "names.message",
-            "description": "<p>The message asscociated with the name</p>"
+            "field": "messages.email",
+            "description": "<p>The email of the user who poseted this message</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "messages.message",
+            "description": "<p>The message text</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "messages.timestamp",
+            "description": "<p>The timestamp of when this message was posted</p>"
           }
         ]
       }
     },
     "error": {
       "fields": {
-        "404: Name Not Found": [
+        "404: ChatId Not Found": [
           {
-            "group": "404: Name Not Found",
+            "group": "404: ChatId Not Found",
             "type": "String",
             "optional": false,
             "field": "message",
-            "description": "<p>&quot;Name not found&quot;</p>"
+            "description": "<p>&quot;Chat ID Not Found&quot;</p>"
+          }
+        ],
+        "400: Missing Parameters": [
+          {
+            "group": "400: Missing Parameters",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Missing required information&quot;</p>"
           }
         ],
         "400: SQL Error": [
@@ -668,6 +692,112 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>the reported SQL error details</p>"
+          }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/messaging.js",
+    "groupTitle": "Messages"
+  },
+  {
+    "type": "post",
+    "url": "/messages",
+    "title": "Request to add a message to a specific chat",
+    "name": "PostMessages",
+    "group": "Messages",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "chatId",
+            "description": "<p>the id of th chat to insert this message into</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>the email of the user inserting the message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>a message to store</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 201": [
+          {
+            "group": "Success 201",
+            "type": "boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>true when the name is inserted</p>"
+          },
+          {
+            "group": "Success 201",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>the inserted name</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "400: Unknown user": [
+          {
+            "group": "400: Unknown user",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;unknown email address&quot;</p>"
+          }
+        ],
+        "400: Missing Parameters": [
+          {
+            "group": "400: Missing Parameters",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Missing required information&quot;</p>"
+          }
+        ],
+        "400: SQL Error": [
+          {
+            "group": "400: SQL Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>the reported SQL error details</p>"
+          }
+        ],
+        "400: Unknow Chat ID": [
+          {
+            "group": "400: Unknow Chat ID",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;invalid chat id&quot;</p>"
           }
         ],
         "400: JSON Error": [

@@ -22,6 +22,10 @@ var router = express.Router()
  * Phish.net api key with this endpoint. Enjoy!
  */ 
 router.get("/blog/get", (req, res) => {
+
+    setTimeout(() => {
+    }, 2000)
+
     // for info on use of tilde (`) making a String literal, see below. 
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
     let url = `https://api.phish.net/v3/blog/get?apikey=${API_KEY}`

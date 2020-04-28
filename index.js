@@ -41,7 +41,9 @@ app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
 
 app.use('/nojwt/phish', require('./routes/phish.js'))
 
-app.use('/messages', require('./routes/messaging.js'))
+app.use('/messages', require('./routes/messages.js'))
+
+app.use('/chats', require('./routes/chats.js'))
 
 
 /*

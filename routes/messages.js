@@ -12,7 +12,33 @@ router.use(bodyParser.json());
 
 let msg_functions = require('../utilities/utils').messaging;
 
-//send a message to all users "in" the chat session with chatId
+/**
+ * @apiDefine JSONError
+ * @apiError (400: JSON Error) {String} message "malformed JSON in parameters"
+ */ 
+
+/**
+ * @api {post} /messages Request to add a message to a specific chat
+ * @apiName PostMessages
+ * @apiGroup Messages
+ * 
+ * @apiParam {Number} chatId the id of th chat to insert this message into
+ * @apiParam {String} email the email of the user inserting the message
+ * @apiParam {String} message a message to store 
+ * 
+ * @apiSuccess (Success 201) {boolean} success true when the name is inserted
+ * @apiSuccess (Success 201) {String} message the inserted name
+ * 
+ * @apiError (400: Unknown user) {String} message "unknown email address"
+ * 
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
+ * 
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
+ * 
+ * @apiError (400: Unknow Chat ID) {String} message "invalid chat id"
+ * 
+ * @apiUse JSONError
+ */ 
 router.post("/", (req, res) => {
     let email = req.body.email
     let message = req.body.message
@@ -70,26 +96,34 @@ router.post("/", (req, res) => {
 })
 
 /**
- * @api {get} /messages/:chatId?/:messageId? Request to get chat messages from the server
+ * @api {get} /messages/:chatId?/:messageId? Request to get chat messages 
  * @apiName GetMessages
  * @apiGroup Messages
  * 
- * @apiParam {String} Optioal name the name to look up. If no name provided, all names are returned
- * @apiParam {String} Optional name the name to look up. If no name provided, all names are returned
+ * @apiDescription Request to get the 10 most recent chat messages
+ * from the server in a given chat - chatId. If an optional messageId is provided,
+ * return the 10 messages in the chat prior to (and not including) the message containing
+ * MessageID.
  * 
- * @apiSuccess {boolean} success true when the name is inserted
- * @apiSuccess {Object[]} names List of names in the Demo DB
- * @apiSuccess {String} names.name The name
- * @apiSuccess {String} names.message The message asscociated with the name
+ * @apiParam {Number} chatId the chat to look up. 
+ * @apiParam {Number} messageId (Optional) return the 10 messages prior to this message
  * 
- * @apiError (404: Name Not Found) {String} message "Name not found"
-
+ * @apiSuccess {Number} rowCount the number of messages returned
+ * @apiSuccess {Object[]} messages List of massages in the message table
+ * @apiSuccess {String} messages.messageId The id for this message
+ * @apiSuccess {String} messages.email The email of the user who poseted this message
+ * @apiSuccess {String} messages.message The message text
+ * @apiSuccess {String} messages.timestamp The timestamp of when this message was posted
+ * 
+ * @apiError (404: ChatId Not Found) {String} message "Chat ID Not Found"
+ * 
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
+ * 
  * @apiError (400: SQL Error) {String} message the reported SQL error details
  * 
  * @apiUse JSONError
  */ 
 router.get("/:chatId?/:messageId?", (request, response, next) => {
-    
         if (!request.params.chatId) {
             response.status(400).send({
                 message: "Missing required information"
@@ -133,19 +167,16 @@ router.get("/:chatId?/:messageId?", (request, response, next) => {
         let values = [request.params.chatId, request.params.messageId]
         pool.query(query, values)
             .then(result => {
-                // console.log("Result:")
-                // console.log(result)
                 response.send({
                     rowCount : result.rowCount,
                     rows: result.rows
                 })
             }).catch(err => {
-                // console.log("Error:")
-                // console.log(err)
                 response.status(400).send({
                     message: "SQL Error",
                     error: err
                 })
             })
 });
+
 module.exports = router;

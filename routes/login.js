@@ -52,7 +52,7 @@ router.get('/', (request, response) => {
         pool.query(theQuery, values)
             .then(result => { 
                 if (result.rowCount == 0) {
-                    response.status(404).json({
+                    response.status(404).send({
                         message: 'User not found' 
                     })
                     return
