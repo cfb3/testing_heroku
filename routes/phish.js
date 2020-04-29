@@ -50,7 +50,7 @@ router.get("/blog/get", (req, res) => {
             var n = body.indexOf("{")
             var nakidBody = body.substring(n - 1)
 
-            res.json(nakidBody)
+            res.send(nakidBody)
         }
     })
 }, 2000)

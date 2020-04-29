@@ -245,3 +245,73 @@ SELECT
 FROM Members
 WHERE Members.Email='test2@test.com'
 RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'Ok ok. No. Charles wont be happy with that.',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test1@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'My exam is over now. Ill get cracking on this thing',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test1@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'I can knoock it out tonight',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test1@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'If I get it by tmorrow AM',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test3@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'i can finish by the aftershock',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test3@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'aftershock',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test3@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'afternoon!!! stupid autocorrect',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test3@test.com'
+RETURNING *;
