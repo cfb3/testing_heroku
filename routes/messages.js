@@ -168,6 +168,7 @@ router.get("/:chatId?/:messageId?", (request, response, next) => {
         pool.query(query, values)
             .then(result => {
                 response.send({
+                    chatId: request.params.chatId,
                     rowCount : result.rowCount,
                     rows: result.rows
                 })
