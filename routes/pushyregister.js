@@ -67,6 +67,9 @@ router.put('/', (request, response, next) => {
             })
         })
 }, (request, response) => {
+
+    console.log(request.body.token)
+
     //ON CONFLICT is a Postgressql syntax. it allows for an extra
     //action when conflicts occur with inserts. This will update 
     //an exisiting users token. 
@@ -74,7 +77,7 @@ router.put('/', (request, response, next) => {
                   VALUES ($1, $2)
                   ON CONFLICT (MemberId) DO UPDATE SET token=$2
                   RETURNING *`
-    let values = [request.params.email, request.params.token]
+    let values = [request.params.email, request.body.token]
     pool.query(insert, values)
         .then(result => {
             response.send({

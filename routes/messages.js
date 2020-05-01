@@ -106,7 +106,7 @@ router.post("/", (req, res) => {
  * MessageID.
  * 
  * @apiParam {Number} chatId the chat to look up. 
- * @apiParam {Number} messageId (Optional) return the 10 messages prior to this message
+ * @apiParam {Number} messageId (Optional) return the 15 messages prior to this message
  * 
  * @apiSuccess {Number} rowCount the number of messages returned
  * @apiSuccess {Object[]} messages List of massages in the message table
@@ -116,7 +116,7 @@ router.post("/", (req, res) => {
  * @apiSuccess {String} messages.timestamp The timestamp of when this message was posted
  * 
  * @apiError (404: ChatId Not Found) {String} message "Chat ID Not Found"
- * 
+ * @apiError (400: Invalid Parameter) {String} message "Malformed parameter. chatId must be a number" 
  * @apiError (400: Missing Parameters) {String} message "Missing required information"
  * 
  * @apiError (400: SQL Error) {String} message the reported SQL error details
@@ -124,15 +124,20 @@ router.post("/", (req, res) => {
  * @apiUse JSONError
  */ 
 router.get("/:chatId?/:messageId?", (request, response, next) => {
+        //validate chatId is not empty or non-number
         if (!request.params.chatId) {
             response.status(400).send({
                 message: "Missing required information"
+            })
+        }  else if (isNaN(request.params.chatId)) {
+            response.status(400).send({
+                message: "Malformed parameter. chatId must be a number"
             })
         } else {
             next()
         }
     }, (request, response, next) => {
-
+        //validate that the ChatId exisits
         let query = 'SELECT * FROM CHATS WHERE ChatId=$1'
         let values = [request.params.chatId]
 
@@ -152,8 +157,11 @@ router.get("/:chatId?/:messageId?", (request, response, next) => {
                 })
             })
     }, (request, response) => {
+        //perform the Select
 
         if (!request.params.messageId) {
+            //no messageId provided. Use the largest possible integer value
+            //allowed for the messageId in the db table. 
             request.params.messageId = 2**31 - 1
         }
 
@@ -163,7 +171,7 @@ router.get("/:chatId?/:messageId?", (request, response, next) => {
                     INNER JOIN Members ON Messages.MemberId=Members.MemberId
                     WHERE ChatId=$1 AND Messages.PrimaryKey < $2
                     ORDER BY Timestamp DESC
-                    LIMIT 10`
+                    LIMIT 15`
         let values = [request.params.chatId, request.params.messageId]
         pool.query(query, values)
             .then(result => {
