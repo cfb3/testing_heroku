@@ -23,8 +23,7 @@ var router = express.Router()
  */ 
 router.get("/blog/get", (req, res) => {
 
-    setTimeout(() => {
-    
+    console.log(req.decoded)
 
     // for info on use of tilde (`) making a String literal, see below. 
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
@@ -53,7 +52,7 @@ router.get("/blog/get", (req, res) => {
             res.send(nakidBody)
         }
     })
-}, 2000)
+
 })
 
 module.exports = router

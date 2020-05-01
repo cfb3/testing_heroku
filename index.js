@@ -37,13 +37,15 @@ app.use('/auth', require('./routes/register.js'))
 
 app.use('/auth', require('./routes/login.js'))
 
+app.use('/auth', middleware.checkToken, require('./routes/pushyregister.js'))
+
 app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
 
 app.use('/nojwt/phish', require('./routes/phish.js'))
 
-app.use('/messages', require('./routes/messages.js'))
+app.use('/messages', middleware.checkToken, require('./routes/messages.js'))
 
-app.use('/chats', require('./routes/chats.js'))
+app.use('/chats', middleware.checkToken, require('./routes/chats.js'))
 
 
 /*
