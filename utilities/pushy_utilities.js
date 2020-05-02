@@ -36,6 +36,7 @@ function sendToIndividual(token, message) {
     var data = {
         "type": "msg",
         "message": message,
+        "chatid": message.chatid
     }
 
     console.log(data)

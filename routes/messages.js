@@ -98,13 +98,14 @@ router.post("/", (request, response, next) => {
     //add the message to the database
     let insert = `INSERT INTO Messages(ChatId, Message, MemberId)
                   VALUES($1, $2, $3) 
-                  RETURNING PrimaryKey AS MessageId, ChatId, Message, MemberId AS email`
+                  RETURNING PrimaryKey AS MessageId, ChatId, Message, MemberId AS email, TimeStamp`
     let values = [request.body.chatId, request.body.message, request.decoded.memberid]
     pool.query(insert, values)
         .then(result => {
             if (result.rowCount == 1) {
                 //insertion success. Attach the message to the Response obj
                 response.message = result.rows[0]
+                response.message.email = request.decoded.email
                 //Pass on to next to push
                 next()
             } else {
