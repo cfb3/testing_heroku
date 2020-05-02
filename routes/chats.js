@@ -1,13 +1,13 @@
 //express is the framework we're going to use to handle requests
-const express = require('express');
+const express = require('express')
 
 //Access the connection to Heroku Database
 let pool = require('../utilities/utils').pool
 
-var router = express.Router();
+var router = express.Router()
 
 //This allows parsing of the body of POST requests, that are encoded in JSON
-router.use(require("body-parser").json());
+router.use(require("body-parser").json())
 
 /**
  * @apiDefine JSONError
@@ -19,6 +19,7 @@ router.use(require("body-parser").json());
  * @apiName PostChats
  * @apiGroup Chats
  * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
  * @apiParam {String} name the name for the chat
  * 
  * @apiSuccess (Success 201) {boolean} success true when the name is inserted
@@ -64,12 +65,15 @@ router.post("/", (request, response, next) => {
 })
 
 /**
- * @api {put} /chats/:chatId?/:email? Request add a user to a chat
+ * @api {put} /chats/:chatId? Request add a user to a chat
  * @apiName PutChats
  * @apiGroup Chats
  * 
+ * @apiDescription Adds the user associated with the required JWT. 
+ * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
+ * 
  * @apiParam {Number} chatId the chat to add the user to
- * @apiParam {String} email the email of the user to add
  * 
  * @apiSuccess {boolean} success true when the name is inserted
  * 
@@ -83,9 +87,9 @@ router.post("/", (request, response, next) => {
  * 
  * @apiUse JSONError
  */ 
-router.put("/:chatId?/:email?", (request, response, next) => {
+router.put("/:chatId?/", (request, response, next) => {
     //validate on empty parameters
-    if (!request.params.chatId || !request.params.email) {
+    if (!request.params.chatId) {
         response.status(400).send({
             message: "Missing required information"
         })
@@ -117,9 +121,9 @@ router.put("/:chatId?/:email?", (request, response, next) => {
             })
         })
 }, (request, response, next) => {
-    //validate email exists AND convert it to the associated memberId
-    let query = 'SELECT MemberID FROM Members WHERE Email=$1'
-    let values = [request.params.email]
+    //validate email exists 
+    let query = 'SELECT * FROM Members WHERE MemberId=$1'
+    let values = [request.decoded.memberid]
 
     pool.query(query, values)
         .then(result => {
@@ -128,7 +132,7 @@ router.put("/:chatId?/:email?", (request, response, next) => {
                     message: "email not found"
                 })
             } else {
-                request.params.email = result.rows[0].memberid
+                //user found
                 next()
             }
         }).catch(error => {
@@ -140,7 +144,7 @@ router.put("/:chatId?/:email?", (request, response, next) => {
 }, (request, response, next) => {
         //validate email does not already exist in the chat
         let query = 'SELECT * FROM ChatMembers WHERE ChatId=$1 AND MemberId=$2'
-        let values = [request.params.chatId, request.params.email]
+        let values = [request.params.chatId, request.decoded.memberid]
     
         pool.query(query, values)
             .then(result => {
@@ -163,7 +167,7 @@ router.put("/:chatId?/:email?", (request, response, next) => {
     let insert = `INSERT INTO ChatMembers(ChatId, MemberId)
                   VALUES ($1, $2)
                   RETURNING *`
-    let values = [request.params.chatId, request.params.email]
+    let values = [request.params.chatId, request.decoded.memberid]
     pool.query(insert, values)
         .then(result => {
             response.send({
@@ -183,6 +187,7 @@ router.put("/:chatId?/:email?", (request, response, next) => {
  * @apiName GetChats
  * @apiGroup Chats
  * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
  * 
  * @apiParam {Number} chatId the chat to look up. 
  * 
@@ -256,6 +261,9 @@ router.get("/:chatId?", (request, response, next) => {
  * @api {delete} /chats/:chatId?/:email? Request delete a user from a chat
  * @apiName DeleteChats
  * @apiGroup Chats
+ * 
+ * @apiDescription Does not delete the user associated with the required JWT but 
+ * instead delelets the user based on the email parameter.  
  * 
  * @apiParam {Number} chatId the chat to delete the user from
  * @apiParam {String} email the email of the user to delete

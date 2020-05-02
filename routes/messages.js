@@ -1,16 +1,15 @@
 //express is the framework we're going to use to handle requests
-const express = require('express');
+const express = require('express')
 
 //Access the connection to Heroku Database
 let pool = require('../utilities/utils').pool
 
-var router = express.Router();
-const bodyParser = require("body-parser");
+var router = express.Router()
 
 //This allows parsing of the body of POST requests, that are encoded in JSON
-router.use(bodyParser.json());
+router.use(require("body-parser").json())
 
-let msg_functions = require('../utilities/utils').messaging;
+let msg_functions = require('../utilities/utils').messaging
 
 /**
  * @apiDefine JSONError
@@ -22,12 +21,14 @@ let msg_functions = require('../utilities/utils').messaging;
  * @apiName PostMessages
  * @apiGroup Messages
  * 
+ * @apiDescription Adds the message from the user associated with the required JWT. 
+ * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
+ * 
  * @apiParam {Number} chatId the id of th chat to insert this message into
- * @apiParam {String} email the email of the user inserting the message
  * @apiParam {String} message a message to store 
  * 
  * @apiSuccess (Success 201) {boolean} success true when the name is inserted
- * @apiSuccess (Success 201) {String} message the inserted name
  * 
  * @apiError (400: Unknown user) {String} message "unknown email address"
  * 
@@ -39,60 +40,108 @@ let msg_functions = require('../utilities/utils').messaging;
  * 
  * @apiUse JSONError
  */ 
-router.post("/", (req, res) => {
-    let email = req.body.email
-    let message = req.body.message
-    let chatId = req.body.chatId
-    if(!email || !message || !chatId) {
-        res.status(400).send({
+router.post("/", (request, response, next) => {
+    //validate on empty parameters
+    if (!request.body.chatId || !request.body.message) {
+        response.status(400).send({
             message: "Missing required information"
         })
-        return
+    } else if (isNaN(request.body.chatId)) {
+        response.status(400).send({
+            message: "Malformed parameter. chatId must be a number"
+        })
+    } else {
+        next()
     }
+}, (request, response, next) => {
+    //validate chat id exists
+    let query = 'SELECT * FROM CHATS WHERE ChatId=$1'
+    let values = [request.body.chatId]
+
+    pool.query(query, values)
+        .then(result => {
+            if (result.rowCount == 0) {
+                response.status(404).send({
+                    message: "Chat ID not found"
+                })
+            } else {
+                next()
+            }
+        }).catch(error => {
+            response.status(400).send({
+                message: "SQL Error on chatid check",
+                error: error
+            })
+        })
+}, (request, response, next) => {
+            //validate memberid exists in the chat
+            let query = 'SELECT * FROM ChatMembers WHERE ChatId=$1 AND MemberId=$2'
+            let values = [request.body.chatId, request.decoded.memberid]
+        
+            pool.query(query, values)
+                .then(result => {
+                    if (result.rowCount > 0) {
+                        next()
+                    } else {
+                        response.status(400).send({
+                            message: "user not in chat"
+                        })
+                    }
+                }).catch(error => {
+                    response.status(400).send({
+                        message: "SQL Error on memeber in chat check",
+                        error: error
+                    })
+                })
+    
+}, (request, response, next) => {
     //add the message to the database
     let insert = `INSERT INTO Messages(ChatId, Message, MemberId)
-                  SELECT $1, $2, MemberId FROM Members 
-                  WHERE email=$3
+                  VALUES($1, $2, $3) 
                   RETURNING *`
-    let values = [chatId, message, email]
+    let values = [request.body.chatId, request.body.message, request.decoded.memberid]
     pool.query(insert, values)
         .then(result => {
             if (result.rowCount == 1) {
-                res.send({
-                    sucess: true
-                })
+                //insertion success. Pass on to next to push
+                next()
             } else {
-                res.status(400).send({
-                    "message": "unknown email address"
+                response.status(400).send({
+                    "message": "unknown error"
                 })
             }
-        //send a notification of this message to ALL members with registered tokens
-        // db.manyOrNone('SELECT * FROM Push_Token')
-        // .then(rows => {
-        //     rows.forEach(element => {
-        //         msg_functions.sendToIndividual(element['token'], message, email);
-        //     })
-        //     res.send({
-        //         success: true
-        //     })
-        // }).catch(err => {
-        //     res.send({
-        //         success: false,
-        //         error: err,
-        //     })
-        // })
+
         }).catch(err => {
-            if (err.constraint == "messages_chatid_fkey") {
-                res.status(400).send({
-                    message: "invalid chat id"
+            response.status(400).send({
+                message: "SQL Error on insert",
+                error: err
+            })
+        })
+}, (request, response) => {
+        // send a notification of this message to ALL members with registered tokens
+        let query = `SELECT token FROM Push_Token
+                        INNER JOIN ChatMembers ON
+                        Push_Token.memberid=ChatMembers.memberid
+                        WHERE ChatMembers.chatId=$1`
+        let values = [request.body.chatId]
+        pool.query(query, values)
+            .then(result => {
+                console.log(request.decoded.email)
+                console.log(request.body.message)
+                result.rows.forEach(entry => 
+                    msg_functions.sendToIndividual(entry.token, 
+                        request.body.message,
+                        request.decoded.email))
+                response.send({
+                    success:true
                 })
-            } else {
-                res.status(400).send({
-                    message: "SQL Error",
+            }).catch(err => {
+                
+                response.status(400).send({
+                    message: "SQL Error on select from push token",
                     error: err
                 })
-            }
-        })
+            })
 })
 
 /**
