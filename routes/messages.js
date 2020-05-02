@@ -98,12 +98,14 @@ router.post("/", (request, response, next) => {
     //add the message to the database
     let insert = `INSERT INTO Messages(ChatId, Message, MemberId)
                   VALUES($1, $2, $3) 
-                  RETURNING *`
+                  RETURNING PrimaryKey AS MessageId, ChatId, Message, MemberId AS email`
     let values = [request.body.chatId, request.body.message, request.decoded.memberid]
     pool.query(insert, values)
         .then(result => {
             if (result.rowCount == 1) {
-                //insertion success. Pass on to next to push
+                //insertion success. Attach the message to the Response obj
+                response.message = result.rows[0]
+                //Pass on to next to push
                 next()
             } else {
                 response.status(400).send({
@@ -130,13 +132,12 @@ router.post("/", (request, response, next) => {
                 console.log(request.body.message)
                 result.rows.forEach(entry => 
                     msg_functions.sendToIndividual(entry.token, 
-                        request.body.message,
-                        request.decoded.email))
+                        response.message))
                 response.send({
                     success:true
                 })
             }).catch(err => {
-                
+
                 response.status(400).send({
                     message: "SQL Error on select from push token",
                     error: err
