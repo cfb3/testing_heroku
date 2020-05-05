@@ -120,6 +120,7 @@ router.put("/:chatId?/", (request, response, next) => {
                 error: error
             })
         })
+        //code here based on the results of the query
 }, (request, response, next) => {
     //validate email exists 
     let query = 'SELECT * FROM Members WHERE MemberId=$1'

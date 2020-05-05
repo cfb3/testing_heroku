@@ -315,3 +315,53 @@ SELECT
 FROM Members
 WHERE Members.Email='test3@test.com'
 RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'Sounds like a plan',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test2@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'lets do it',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test2@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'lets dooooooo it',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test1@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    '3 2 1 Break',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test3@test.com'
+RETURNING *;
+
+INSERT INTO 
+    Messages(ChatId, Message, MemberId)
+SELECT 
+    1, 
+    'l8r',
+    Members.MemberId
+FROM Members
+WHERE Members.Email='test2@test.com'
+RETURNING *;
