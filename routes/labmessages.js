@@ -9,7 +9,7 @@ var router = express.Router()
 //This allows parsing of the body of POST requests, that are encoded in JSON
 router.use(require("body-parser").json())
 
-// let msg_functions = require('../utilities/utils').messaging
+let msg_functions = require('../utilities/utils').messaging
 
 /**
  * @apiDefine JSONError
@@ -129,9 +129,9 @@ router.post("/", (request, response, next) => {
         let values = [request.body.chatId]
         pool.query(query, values)
             .then(result => {
-                // result.rows.forEach(entry => 
-                //     msg_functions.sendToIndividual(entry.token, 
-                //         response.message))
+                result.rows.forEach(entry => 
+                    msg_functions.sendToIndividual(entry.token, 
+                        response.message))
                 response.send({
                     success:true
                 })

@@ -74,7 +74,7 @@ router.get('/', (request, response) => {
                         },
                         config.secret,
                         { 
-                            expiresIn: '14 days' // expires in 24 hours
+                            expiresIn: '14 days' // expires in 14 days
                         }
                     )
                     //package and send the results

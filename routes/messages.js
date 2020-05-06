@@ -132,7 +132,8 @@ router.post("/", (request, response, next) => {
                 console.log(request.decoded.email)
                 console.log(request.body.message)
                 result.rows.forEach(entry => 
-                    msg_functions.sendToIndividual(entry.token, 
+                    msg_functions.sendMessageToIndividual(
+                        entry.token, 
                         response.message))
                 response.send({
                     success:true
