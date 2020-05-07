@@ -137,9 +137,9 @@ router.delete('/', (request, response, next) => {
 }, (request, response) => {
     //delete the users pushy token
     let insert = `DELETE FROM Push_Token
-                  MemberId=$1
+                  WHERE MemberId=$1
                   RETURNING *`
-    let values = [request.decoded.memberid, request.body.token]
+    let values = [request.decoded.memberid]
     pool.query(insert, values)
         .then(result => {
             response.send({
