@@ -377,4 +377,4 @@ router.delete("/:chatId?/:email?", (request, response, next) => {
     }
 )
 
-module.exports = router;
+module.exports = router

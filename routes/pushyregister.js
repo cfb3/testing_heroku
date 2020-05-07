@@ -43,7 +43,7 @@ router.put('/', (request, response, next) => {
     //the request object. 
     let memberid = request.decoded.memberid
 
-    //validate email exists AND convert it to the associated memberId
+    //validate email exists
     let query = 'SELECT * FROM Members WHERE MemberId=$1'
     let values = [memberid]
 
@@ -73,6 +73,71 @@ router.put('/', (request, response, next) => {
     let insert = `INSERT INTO Push_Token(MemberId, Token)
                   VALUES ($1, $2)
                   ON CONFLICT (MemberId) DO UPDATE SET token=$2
+                  RETURNING *`
+    let values = [request.decoded.memberid, request.body.token]
+    pool.query(insert, values)
+        .then(result => {
+            response.send({
+                sucess: true
+            })
+        }).catch(err => {
+            response.status(400).send({
+                message: "SQL Error",
+                error: err
+            })
+        })
+})
+
+/**
+ * @api {delete} /auth Request to delete a Pushy Token for the user
+ * @apiName DeleteAuth
+ * @apiGroup Auth
+ * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
+ * 
+ * @apiSuccess {boolean} success true when the pushy token is deleted
+ * 
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
+ * 
+ * @apiError (404: User Not Found) {String} message "user not found"
+ * 
+ * @apiError (400: JSON Error) {String} message "malformed JSON in parameters"
+ * 
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
+ */ 
+router.delete('/', (request, response, next) => {
+    //the JWT middleware.js function decodes the JWT and stores the email 
+    //and memberId in an object called decoded. It adds this object to 
+    //the request object. 
+    let memberid = request.decoded.memberid
+
+    //validate email exists
+    let query = 'SELECT * FROM Members WHERE MemberId=$1'
+    let values = [memberid]
+
+    pool.query(query, values)
+        .then(result => {
+            if (result.rowCount == 0) {
+                //this should NOT happen. The memberid is coming from a 
+                //JWT created by this service. But, keep the check here
+                //anyway.
+                response.status(404).send({
+                    message: "user not found"
+                })
+            } else {
+                //user found
+                next()
+            }
+        }).catch(error => {
+            response.status(400).send({
+                message: "SQL Error",
+                error: error
+            })
+        })
+}, (request, response) => {
+    //delete the users pushy token
+    let insert = `DELETE FROM Push_Token
+                  MemberId=$1
                   RETURNING *`
     let values = [request.decoded.memberid, request.body.token]
     pool.query(insert, values)

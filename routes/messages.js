@@ -240,4 +240,4 @@ router.get("/:chatId?/:messageId?", (request, response, next) => {
             })
 });
 
-module.exports = router;
+module.exports = router
