@@ -87,7 +87,7 @@ router.post("/", (request, response, next) => {
  * 
  * @apiUse JSONError
  */ 
-router.put("/:chatId?/", (request, response, next) => {
+router.put("/:chatId/", (request, response, next) => {
     //validate on empty parameters
     if (!request.params.chatId) {
         response.status(400).send({
@@ -204,7 +204,7 @@ router.put("/:chatId?/", (request, response, next) => {
  * 
  * @apiUse JSONError
  */ 
-router.get("/:chatId?", (request, response, next) => {
+router.get("/:chatId", (request, response, next) => {
     //validate on missing or invalid (type) parameters
     if (!request.params.chatId) {
         response.status(400).send({
@@ -281,7 +281,7 @@ router.get("/:chatId?", (request, response, next) => {
  * 
  * @apiUse JSONError
  */ 
-router.delete("/:chatId?/:email?", (request, response, next) => {
+router.delete("/:chatId/:email", (request, response, next) => {
     //validate on empty parameters
     if (!request.params.chatId || !request.params.email) {
         response.status(400).send({
