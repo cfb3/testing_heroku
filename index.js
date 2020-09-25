@@ -27,11 +27,17 @@ app.use('/wait', require('./routes/wait.js'))
 
 app.use('/demosql', require('./routes/demosql.js'))
 
+
+
+
 app.use('/auth', require('./routes/register.js'))
 
 app.use('/auth', require('./routes/login.js'))
 
 app.use('/auth', middleware.checkToken, require('./routes/pushyregister.js'))
+
+
+
 
 app.use('/phish', middleware.checkToken, require('./routes/phish.js'))
 

@@ -27,7 +27,7 @@ router.use(require("body-parser").json())
  * 
  * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
-router.put('/', (request, response, next) => {
+router.put('/', middleware.checkToken, (request, response, next) => {
     //validate on missing parameters
     //don't need to check JWT, it was already checked via middleware.js
     if (!request.body.token) {
@@ -105,7 +105,7 @@ router.put('/', (request, response, next) => {
  * 
  * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
-router.delete('/', (request, response, next) => {
+router.delete('/', middleware.checkToken, (request, response, next) => {
     //the JWT middleware.js function decodes the JWT and stores the email 
     //and memberId in an object called decoded. It adds this object to 
     //the request object. 
