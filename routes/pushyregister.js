@@ -9,6 +9,8 @@ var router = express.Router()
 //This allows parsing of the body of POST requests, that are encoded in JSON
 router.use(require("body-parser").json())
 
+let middleware = require('./utilities/middleware')
+
 /**
  * @api {put} /auth Request to insert a Pushy Token for the user
  * @apiName PutAuth
