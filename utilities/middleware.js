@@ -15,7 +15,7 @@ let checkToken = (req, res, next) => {
 
     jwt.verify(token, config.secret, (err, decoded) => {
       if (err) {
-        return res.status(403).json({
+        return res.status(401).json({
           success: false,
           message: 'Token is not valid'
         });

@@ -17,7 +17,6 @@ router.get("/", (request, response) => {
     })
 })
 
-
 /**
  * @api {post} /hello Request a Hello World message
  * @apiName PostHello

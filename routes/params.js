@@ -25,8 +25,7 @@ router.get("/", (request, response) => {
             message: "Hello, " + request.query.name + "! You sent a GET Request"
         })
     } else {
-        response.status(400)
-        response.send({
+        response.status(400).send({
             message: "Missing required information"
         })
     }
@@ -50,8 +49,7 @@ router.post("/", (request, response) => {
             message: "Hello, " + request.body.name + "! You sent a POST Request"
         })
     } else {
-        response.status(400)
-        response.send({
+        response.status(400).send({
             message: "Missing required information"
         })
     }

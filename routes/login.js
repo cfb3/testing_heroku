@@ -37,10 +37,13 @@ let config = {
  * 
  * @apiError (400: SQL Error) {String} message the reported SQL error details
  */ 
-router.get('/', (request, response) => {
+router.get('/', (request, response, next) => {
     if (!request.headers.authorization || request.headers.authorization.indexOf('Basic ') === -1) {
-        return response.status(401).json({ message: 'Missing Authorization Header' })
+        response.status(401).json({ message: 'Missing Authorization Header' })
+    } else {
+        next()
     }
+}, (request, response, next) => {
     // obtain auth credentials from HTTP Header
     const base64Credentials =  request.headers.authorization.split(' ')[1]
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii')
