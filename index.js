@@ -6,6 +6,8 @@ const app = express()
 let middleware = require('./utilities/middleware')
 
 const bodyParser = require("body-parser")
+
+
 //This allows parsing of the body of POST requests, that are encoded in JSON
 app.use(bodyParser.json())
 
@@ -13,7 +15,7 @@ app.use(function(err, req, res, next) {
     //This middleware function will respond to inproperly formed JSON in 
    //request parameters.
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-    res.status(400).send({ message: "malformed JSON in parameters" });
+    res.status(400).send({ message: "malformed JSON in parameters" })
   } else next();
 })
 
@@ -50,7 +52,7 @@ app.get("/", (request, response) => {
     response.writeHead(200, {'Content-Type': 'text/html'});
     for (i = 1; i < 7; i++) {
         //write a response to the client
-        response.write('<h' + i + ' style="color:blue">Hello World!</h' + i + '>'); 
+        response.write('<h' + i + ' style="color:blue">Hello World!</h' + i + '>')
     }
     response.end(); //end the response
 });
@@ -74,5 +76,5 @@ app.use("/files", express.static('routes'))
 * if(port == null) {port = 5000} 
 */ 
 app.listen(process.env.PORT || 5000, () => {
-    console.log("Server up and running on port: " + (process.env.PORT || 5000));
+    console.log("Server up and running on port: " + (process.env.PORT || 5000))
 });

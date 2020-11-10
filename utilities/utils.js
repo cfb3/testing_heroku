@@ -5,7 +5,7 @@ let pool = require('./sql_conn.js')
 const crypto = require("crypto");
 
 function sendEmail(from, receiver, subj, message) {
-  //research nodemailer for sending email from node.
+  //research nodemailer for sending email from node.js
   // https://nodemailer.com/about/
   // https://www.w3schools.com/nodejs/nodejs_email.asp
   //create a burner gmail account 
